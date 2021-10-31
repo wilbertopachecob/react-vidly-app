@@ -1,10 +1,15 @@
 import { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
 import Like from "./common/like.jsx";
+import Pagination from "./common/pagination";
+import paginate from "./utils/paginate";
+
+const PAGE_SIZE = 4;
 
 class Movies extends Component {
   state = {
     movies: getMovies(),
+    currentPage: 1,
   };
 
   handleDelete(id) {
@@ -23,11 +28,19 @@ class Movies extends Component {
     });
   }
 
+  updateSlice = (index) => {
+    this.setState({
+      currentPage: index,
+    });
+  };
+
   render() {
-    const { movies } = this.state;
-    return movies.length ? (
+    const { movies: allMovies, currentPage } = this.state;
+    const count = allMovies.length;
+    const movies = paginate(allMovies, PAGE_SIZE, currentPage);
+    return count ? (
       <div className="container">
-        <h3>Showing {movies.length} movies in the database</h3>
+        <h3>Showing {count} movies in the database</h3>
         <table className="table">
           <thead>
             <tr>
@@ -64,6 +77,12 @@ class Movies extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          pageSize={PAGE_SIZE}
+          total={count}
+          onPaginate={this.updateSlice}
+          currentPage={currentPage}
+        />
       </div>
     ) : (
       <div className="container">
