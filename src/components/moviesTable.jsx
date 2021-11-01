@@ -1,39 +1,21 @@
 import Like from "./common/like.jsx";
+import TableHeader from "./common/tableHeader.jsx";
 
 const MoviesTable = (props) => {
-  const { movies, onLike, onDelete, onSort } = props;
+  const { movies, onLike, onDelete, onSort, sortColumn } = props;
 
-  const raiseSort = (path) => {
-    const sortColumn = { ...props.sortColumn };
-    if (path === sortColumn.path) {
-      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
-    } else {
-      sortColumn.path = path;
-      sortColumn.order = "asc";
-    }
-    onSort(sortColumn);
-  };
+  const columns = [
+    { path: "title", label: "Title" },
+    { path: "genre.name", label: "Genre" },
+    { path: "numberInStock", label: "Stock" },
+    { path: "dailyRentalRate", label: "Rate" },
+    { key: "like" },
+    { key: "delete" },
+  ];
 
   return (
     <table className="table">
-      <thead>
-        <tr>
-          <th scope="col" onClick={() => raiseSort("title")}>
-            Title
-          </th>
-          <th scope="col" onClick={() => raiseSort("genre.name")}>
-            Genre
-          </th>
-          <th scope="col" onClick={() => raiseSort("numberInStock")}>
-            Stock
-          </th>
-          <th scope="col" onClick={() => raiseSort("dailyRentalRate")}>
-            Rate
-          </th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
+      <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
       <tbody>
         {movies.map((movie) => (
           <tr key={movie._id}>
