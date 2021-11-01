@@ -9,7 +9,7 @@ const ListGroup = (props) => {
           type="button"
           key={item[valueProperty]}
           className={`list-group-item list-group-item-action ${
-            seletedItem[valueProperty] === item[valueProperty] ? "active" : ""
+            seletedItem === item ? "active" : ""
           }`}
           aria-current="true"
           onClick={() => onItemSelect(item)}
