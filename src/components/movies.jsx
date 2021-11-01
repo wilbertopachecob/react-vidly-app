@@ -6,6 +6,7 @@ import ListGroup from "./common/listGroup.jsx";
 import paginate from "./utils/paginate";
 import { getGenres } from "../services/fakeGenreService";
 import MoviesTable from "./moviesTable";
+import { orderBy as _orderBy } from "lodash";
 
 const PAGE_SIZE = 4;
 
@@ -15,6 +16,7 @@ class Movies extends Component {
     currentPage: 1,
     genres: [],
     selectedGenre: {},
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
@@ -36,12 +38,18 @@ class Movies extends Component {
     });
   };
 
-  updateLike = (movie) => {
+  handleLike = (movie) => {
     const movies = [...this.state.movies];
     const index = movies.indexOf(movie);
     movies[index].liked = !movies[index].liked;
     this.setState({
       movies,
+    });
+  };
+
+  handleSort = (sortColumn) => {
+    this.setState({
+      sortColumn,
     });
   };
 
@@ -64,12 +72,15 @@ class Movies extends Component {
       currentPage,
       selectedGenre,
       genres,
+      sortColumn,
     } = this.state;
     let count = 0;
     let movies = allMovies;
     if (selectedGenre._id !== "all") {
       movies = movies.filter((movie) => movie.genre._id === selectedGenre._id);
     }
+
+    movies = _orderBy(movies, [sortColumn.path], sortColumn.order);
 
     count = movies.length;
     movies = paginate(movies, PAGE_SIZE, currentPage);
@@ -90,7 +101,9 @@ class Movies extends Component {
             <MoviesTable
               movies={movies}
               onDelete={this.handleDelete}
-              onLike={this.updateLike}
+              onLike={this.handleLike}
+              onSort={this.handleSort}
+              sortColumn={sortColumn}
             />
             <Pagination
               pageSize={PAGE_SIZE}
