@@ -1,6 +1,5 @@
 import Like from "./common/like.jsx";
-import TableBody from "./common/tableBody.jsx";
-import TableHeader from "./common/tableHeader.jsx";
+import Table from "./common/table.jsx";
 
 const MoviesTable = (props) => {
   const { movies, onLike, onDelete, onSort, sortColumn } = props;
@@ -30,10 +29,12 @@ const MoviesTable = (props) => {
   ];
 
   return (
-    <table className="table">
-      <TableHeader columns={columns} sortColumn={sortColumn} onSort={onSort} />
-      <TableBody data={movies} columns={columns} valueProperty="_id"/>
-    </table>
+    <Table
+      columns={columns}
+      data={movies}
+      onSort={onSort}
+      sortColumn={sortColumn}
+    />
   );
 };
 
