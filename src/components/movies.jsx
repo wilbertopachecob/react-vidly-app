@@ -66,24 +66,31 @@ class Movies extends Component {
     });
   };
 
-  render() {
-    const {
-      movies: allMovies,
-      currentPage,
-      selectedGenre,
-      genres,
-      sortColumn,
-    } = this.state;
-    let count = 0;
-    let movies = allMovies;
+  getPagedMovies = () => {
+    let { movies } = this.state;
+    const { selectedGenre, sortColumn, currentPage } = this.state;
     if (selectedGenre._id !== "all") {
       movies = movies.filter((movie) => movie.genre._id === selectedGenre._id);
     }
 
     movies = _orderBy(movies, [sortColumn.path], sortColumn.order);
 
-    count = movies.length;
+    const count = movies.length;
     movies = paginate(movies, PAGE_SIZE, currentPage);
+    return {
+      count,
+      movies,
+    };
+  };
+
+  render() {
+    const {
+      currentPage,
+      selectedGenre,
+      genres,
+      sortColumn,
+    } = this.state;
+    const {count, movies} = this.getPagedMovies();
     return count ? (
       <div className="container">
         <h3>Showing {count} movies in the database</h3>
