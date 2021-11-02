@@ -34,6 +34,7 @@ const MoviesTable = (props) => {
       data={movies}
       onSort={onSort}
       sortColumn={sortColumn}
+      valueProperty="_id"
     />
   );
 };
