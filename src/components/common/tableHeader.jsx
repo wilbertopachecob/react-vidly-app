@@ -12,6 +12,16 @@ const TableHeader = (props) => {
     onSort(sortColumn);
   };
 
+  const renderSortIcon = (column) => {
+    if (column.path !== props.sortColumn.path) {
+      return null; 
+    }
+    if (props.sortColumn.order === "asc") {
+      return <i className="fa fa-sort-asc"></i>
+    }
+    return <i className="fa fa-sort-desc"></i>
+  }
+
   return (
     <thead>
       <tr>
@@ -20,8 +30,9 @@ const TableHeader = (props) => {
             key={column.path || column.key}
             scope="col"
             onClick={() => raiseSort(column.path)}
+            className="clickable"
           >
-            {column.label}
+            {column.label} {renderSortIcon(column)}
           </th>
         ))}
       </tr>
