@@ -1,7 +1,25 @@
+import { useRef, useEffect, useState } from "react";
+
 function LoginForm(props) {
+  const [account, setAccount] = useState({username: '', password: ''});
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  useEffect(() => {
+    if (emailRef.current) {
+      emailRef.current.focus()  
+    }
+  }, [])
+
   function handleSubmit(e) {
     e.preventDefault();
-    console.log('Submitted');
+    console.log("Submitted", emailRef.current.value, passwordRef.current.value);
+  }
+
+  function handleChange({currentTarget: input}) {
+   const currentState = {...account};
+   currentState[input.name] = input.value;
+   setAccount(currentState); 
   }
 
   return (
@@ -12,9 +30,13 @@ function LoginForm(props) {
           Email address
         </label>
         <input
+          value={account.username}
+          onChange={handleChange}
+          ref={emailRef}
           type="email"
           className="form-control"
           id="email"
+          name="username"
           aria-describedby="emailHelp"
         />
       </div>
@@ -22,7 +44,15 @@ function LoginForm(props) {
         <label htmlFor="password" className="form-label">
           Password
         </label>
-        <input type="password" className="form-control" id="password" />
+        <input
+          ref={passwordRef}
+          value={account.password}
+          onChange={handleChange}
+          name="password"
+          type="password"
+          className="form-control"
+          id="password"
+        />
       </div>
       <button type="submit" className="btn btn-primary">
         Submit
