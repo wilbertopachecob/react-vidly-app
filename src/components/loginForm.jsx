@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState } from "react";
 
-function LoginForm(props) {
+function LoginForm() {
   const [account, setAccount] = useState({username: '', password: ''});
+  const [errors, setErrors] = useState({});
   const emailRef = useRef(null);
-  const passwordRef = useRef(null);
 
   useEffect(() => {
     if (emailRef.current) {
@@ -11,9 +11,27 @@ function LoginForm(props) {
     }
   }, [])
 
+  function validate() {
+    const errors = {}  
+    if(account.username.trim() === '') {
+      errors.username = 'Username is required';
+    }
+
+    if(account.password.trim() === '') {
+      errors.password = 'Password is required';
+    }
+    return Object.keys(errors).length === 0 ? null : errors;
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
-    console.log("Submitted", emailRef.current.value, passwordRef.current.value);
+    const errors = validate();
+    setErrors(errors || {});
+    if (errors !== null) {
+        return;
+    }
+
+    //call server
   }
 
   function handleChange({currentTarget: input}) {
@@ -26,7 +44,7 @@ function LoginForm(props) {
     <form onSubmit={(e) => handleSubmit(e)}>
       <h1>Login</h1>
       <div className="mb-3">
-        <label htmlFor="email" className="form-label">
+        <label htmlFor="username" className="form-label">
           Email address
         </label>
         <input
@@ -35,17 +53,19 @@ function LoginForm(props) {
           ref={emailRef}
           type="email"
           className="form-control"
-          id="email"
+          id="username"
           name="username"
           aria-describedby="emailHelp"
         />
+        {errors.username && <div className="alert alert-danger mt-1">
+          {errors.username}
+        </div>}
       </div>
       <div className="mb-3">
         <label htmlFor="password" className="form-label">
           Password
         </label>
         <input
-          ref={passwordRef}
           value={account.password}
           onChange={handleChange}
           name="password"
@@ -53,6 +73,9 @@ function LoginForm(props) {
           className="form-control"
           id="password"
         />
+        {errors.password && <div className="alert alert-danger mt-1">
+          {errors.password}
+        </div>}
       </div>
       <button type="submit" className="btn btn-primary">
         Submit
