@@ -5,7 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-top: 20px;
 }
 
 code {
@@ -15,4 +14,12 @@ code {
 
 .clickable {
   cursor: pointer;
+}
+
+table.table a {
+  text-decoration: none;
+}
+
+table.table a:hover {
+  text-decoration: underline;
 }
