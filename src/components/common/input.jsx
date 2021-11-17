@@ -10,7 +10,7 @@ Input.propTypes = {
   type: PropTypes.string,
 };
 
-function Input({ name, label, error, onChange, value, type }) {
+function Input({ name, label, error, onChange, value, type = 'text' }) {
   return (
     <div className="mb-3">
       <label htmlFor={name} className="form-label">
