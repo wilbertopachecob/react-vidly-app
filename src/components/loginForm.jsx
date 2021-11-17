@@ -58,8 +58,7 @@ function LoginForm() {
       <h1>Login</h1>
       <Input
         name="username"
-        type="email"
-        label="Email Address"
+        label="Username"
         onChange={handleChange}
         value={account.username}
         error={errors.username}
