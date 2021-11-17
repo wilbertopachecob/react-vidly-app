@@ -1,79 +1,25 @@
 import { useState } from "react";
-import Input from "./common/input";
 import Joi from "joi-browser";
+import Form from "./utils/forms-helper.js";
 
 function RegisterForm() {
-  const [account, setAccount] = useState({ username: "", password: "" });
+  const [data, setData] = useState({ username: "", password: "", name: "" });
   const [errors, setErrors] = useState({});
   const schema = {
     username: Joi.string().required().label("Email Address"),
     password: Joi.string().required().label("Password"),
-  };
-  const schemaOptions = { abortEarly: false };
-
-  function validate() {
-    const { error } = Joi.validate(account, schema, schemaOptions);
-    if (!error) {
-      return null;
-    }
-
-    const errors = {};
-    for (const item of error.details) {
-      errors[item.path[0]] = item.message;
-    }
-    return errors;
-  }
-
-  const validateProperty = ({ name, value }) => {
-    const obj = { [name]: value };
-    const propertySchema = { [name]: schema[name] };
-    const { error } = Joi.validate(obj, propertySchema);
-    return error ? error.details[0].message : null;
+    name: Joi.string().required().label("Names"),
   };
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const errors = validate();
-    setErrors(errors || {});
-    if (errors !== null) {
-      return;
-    }
-
-    //call server
-  }
-
-  const handleChange = ({ currentTarget: input }) => {
-    const error = validateProperty(input);
-    const errorState = { ...errors };
-    errorState[input.name] = error;
-    setErrors(errorState);
-
-    const accountState = { ...account };
-    accountState[input.name] = input.value;
-    setAccount(accountState);
-  };
+  const form = Form(data, setData, errors, setErrors, schema);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
-      <h1>Login</h1>
-      <Input
-        name="username"
-        label="Username"
-        onChange={handleChange}
-        value={account.username}
-        error={errors.username}
-      />
-      <Input
-        name="password"
-        type="password"
-        label="Password"
-        onChange={handleChange}
-        value={account.password}
-        error={errors.password}
-      />
-      <button disabled={validate()} type="submit" className="btn btn-primary">
-        Submit
-      </button>
+    <form onSubmit={(e) => form.handleSubmit(e)}>
+      <h1>Register</h1>
+      {form.renderInput("username", "Username")}
+      {form.renderInput("password", "Password", "password")}
+      {form.renderInput("name", "Name")}
+      {form.renderSubmitButton()}
     </form>
   );
 }
