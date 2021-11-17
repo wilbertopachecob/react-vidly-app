@@ -33,6 +33,9 @@ function Navbar() {
             <NavLink className="nav-link float-end" to="/login">
               Login
             </NavLink>
+            <NavLink className="nav-link float-end" to="/register">
+              Register
+            </NavLink>
           </div>
         </div>
       </div>
