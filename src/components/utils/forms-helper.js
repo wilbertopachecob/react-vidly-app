@@ -32,7 +32,7 @@ export default function form(data, setData, errors, setErrors, schema) {
       return false;
     }
 
-    return true
+    return true;
   }
 
   const handleChange = ({ currentTarget: input }) => {
@@ -54,7 +54,7 @@ export default function form(data, setData, errors, setErrors, schema) {
     );
   }
 
-  function renderInput(name, label, type = 'text') {
+  function renderInput(name, label, type = "text") {
     return (
       <Input
         name={name}
@@ -67,6 +67,33 @@ export default function form(data, setData, errors, setErrors, schema) {
     );
   }
 
+  function renderSelect(options, name, label) {
+    return (
+      <div className="mb-3">
+        <label className="form-label" htmlFor={name}>
+          {label}
+        </label>
+        <select
+          className="form-select"
+          name={name}
+          id={name}
+          onChange={handleChange}
+          value={data[name]}
+        >
+          <option></option>
+          {options.map((option) => (
+            <option key={option._id} value={option._id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+        {errors[name] && (
+          <div className="alert alert-danger mt-1">{errors[name]}</div>
+        )}
+      </div>
+    );
+  }
+
   return {
     validate,
     validateProperty,
@@ -74,5 +101,6 @@ export default function form(data, setData, errors, setErrors, schema) {
     handleChange,
     renderSubmitButton,
     renderInput,
+    renderSelect,
   };
 }
