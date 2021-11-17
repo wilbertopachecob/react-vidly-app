@@ -7,12 +7,15 @@ import paginate from "./utils/paginate";
 import { getGenres } from "../services/fakeGenreService";
 import MoviesTable from "./moviesTable";
 import { orderBy as _orderBy } from "lodash";
+import MovieSearch from "./movieSearch";
 
 const PAGE_SIZE = 4;
+const allGenre = { _id: "all", name: "All items" };
 
 class Movies extends Component {
   state = {
     movies: [],
+    searchTerm: "",
     currentPage: 1,
     genres: [],
     selectedGenre: {},
@@ -20,7 +23,6 @@ class Movies extends Component {
   };
 
   componentDidMount() {
-    const allGenre = { _id: "all", name: "All items" };
     const genres = getGenres();
     genres.unshift(allGenre);
 
@@ -63,13 +65,18 @@ class Movies extends Component {
     this.setState({
       selectedGenre: genre,
       currentPage: 1,
+      searchTerm: "",
     });
   };
 
   getPagedMovies = () => {
     let { movies } = this.state;
-    const { selectedGenre, sortColumn, currentPage } = this.state;
-    if (selectedGenre._id !== "all") {
+    const { selectedGenre, sortColumn, currentPage, searchTerm } = this.state;
+    if (searchTerm) {
+      movies = movies.filter((movie) =>
+        movie.title.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+    } else if (selectedGenre._id !== "all") {
       movies = movies.filter((movie) => movie.genre._id === selectedGenre._id);
     }
 
@@ -88,8 +95,17 @@ class Movies extends Component {
     history.push("/movies/add");
   };
 
+  movieSearch = (searchTerm) => {
+    this.setState({
+      selectedGenre: allGenre,
+      currentPage: 1,
+      searchTerm,
+    });
+  };
+
   render() {
-    const { currentPage, selectedGenre, genres, sortColumn } = this.state;
+    const { currentPage, selectedGenre, genres, sortColumn, searchTerm } =
+      this.state;
     const { count, movies } = this.getPagedMovies();
     return count ? (
       <div className="container">
@@ -104,10 +120,14 @@ class Movies extends Component {
             />
           </div>
           <div className="col">
-            <button className="btn btn-primary" onClick={this.goToNewMovie}>
+            <button
+              className="btn btn-primary mb-2"
+              onClick={this.goToNewMovie}
+            >
               New movie
             </button>
             <h3>Showing {count} movies in the database</h3>
+            <MovieSearch onChange={this.movieSearch} value={searchTerm} />
             <MoviesTable
               movies={movies}
               onDelete={this.handleDelete}
