@@ -29,10 +29,10 @@ export default function form(data, setData, errors, setErrors, schema) {
     const errors = validate();
     setErrors(errors || {});
     if (errors !== null) {
-      return;
+      return false;
     }
 
-    //call server
+    return true
   }
 
   const handleChange = ({ currentTarget: input }) => {
