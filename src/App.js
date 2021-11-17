@@ -7,6 +7,7 @@ import NotFound from "./components/not-found";
 import MovieForm from "./components/movieForm";
 import React from "react";
 import LoginForm from './components/loginForm';
+import RegisterForm from './components/register';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <main className="container mt-3">
         <Switch>
           <Route path="/login" component={LoginForm} />
+          <Route path="/register" component={RegisterForm} />
           <Route path="/movies/:id" component={MovieForm} />
           <Route path="/movies" component={Movies} />
           <Route path="/rentals" component={Rentals} />
