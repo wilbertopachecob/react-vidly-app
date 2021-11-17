@@ -8,6 +8,7 @@ import MovieForm from "./components/movieForm";
 import React from "react";
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/register';
+import NewMovie from './components/newMovie';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route path="/login" component={LoginForm} />
           <Route path="/register" component={RegisterForm} />
+          <Route path="/movies/add" component={NewMovie} />
           <Route path="/movies/:id" component={MovieForm} />
           <Route path="/movies" component={Movies} />
           <Route path="/rentals" component={Rentals} />
