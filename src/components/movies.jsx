@@ -83,17 +83,16 @@ class Movies extends Component {
     };
   };
 
+  goToNewMovie = () => {
+    const { history } = this.props;
+    history.push("/movies/add");
+  };
+
   render() {
-    const {
-      currentPage,
-      selectedGenre,
-      genres,
-      sortColumn,
-    } = this.state;
-    const {count, movies} = this.getPagedMovies();
+    const { currentPage, selectedGenre, genres, sortColumn } = this.state;
+    const { count, movies } = this.getPagedMovies();
     return count ? (
       <div className="container">
-        <h3>Showing {count} movies in the database</h3>
         <div className="row">
           <div className="col-3">
             <ListGroup
@@ -105,6 +104,10 @@ class Movies extends Component {
             />
           </div>
           <div className="col">
+            <button className="btn btn-primary" onClick={this.goToNewMovie}>
+              New movie
+            </button>
+            <h3>Showing {count} movies in the database</h3>
             <MoviesTable
               movies={movies}
               onDelete={this.handleDelete}
