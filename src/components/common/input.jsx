@@ -6,7 +6,10 @@ Input.propTypes = {
   label: PropTypes.string,
   error: PropTypes.string,
   onChange: PropTypes.func,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   type: PropTypes.string,
 };
 
