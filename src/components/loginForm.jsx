@@ -9,19 +9,27 @@ function LoginForm() {
     username: Joi.string().required().label("Email Address"),
     password: Joi.string().required().label("Password"),
   };
+  const schemaOptions = { abortEarly: false };
 
   function validate() {
-    const result = Joi.validate(account, schema, { abortEarly: false });
-    if (!result.error) {
+    const { error } = Joi.validate(account, schema, schemaOptions);
+    if (!error) {
       return null;
     }
 
     const errors = {};
-    for (const item of result.error.details) {
+    for (const item of error.details) {
       errors[item.path[0]] = item.message;
     }
     return errors;
   }
+
+  const validateProperty = ({ name, value }) => {
+    const obj = { [name]: value };
+    const propertySchema = { [name]: schema[name] };
+    const { error } = Joi.validate(obj, propertySchema);
+    return error ? error.details[0].message : null;
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -35,9 +43,14 @@ function LoginForm() {
   }
 
   const handleChange = ({ currentTarget: input }) => {
-    const currentState = { ...account };
-    currentState[input.name] = input.value;
-    setAccount(currentState);
+    const error = validateProperty(input);
+    const errorState = { ...errors };
+    errorState[input.name] = error;
+    setErrors(errorState);
+
+    const accountState = { ...account };
+    accountState[input.name] = input.value;
+    setAccount(accountState);
   };
 
   return (
