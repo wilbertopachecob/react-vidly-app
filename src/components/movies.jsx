@@ -4,7 +4,7 @@ import { getMovies, deleteMovie } from "../services/fakeMovieService";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup.jsx";
 import paginate from "./utils/paginate";
-import { getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
 import MoviesTable from "./moviesTable";
 import { orderBy as _orderBy } from "lodash";
 import MovieSearch from "./movieSearch";
@@ -22,8 +22,8 @@ class Movies extends Component {
     sortColumn: { path: "title", order: "asc" },
   };
 
-  componentDidMount() {
-    const genres = getGenres();
+  async componentDidMount() {
+    const {data: genres} = await getGenres();
     genres.unshift(allGenre);
 
     this.setState({
