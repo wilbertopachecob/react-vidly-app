@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Joi from "joi-browser";
 import Form from "./utils/forms-helper.js";
-import { getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
 import { saveMovie } from "../services/fakeMovieService";
 
 const initialData = {
@@ -11,10 +11,10 @@ const initialData = {
   numberInStock: "",
 };
 
-function NewMovie() {
+async function NewMovie() {
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  const genres = getGenres();
+  const {data: genres} = await getGenres();
   const schema = {
     title: Joi.string().required().label("Title"),
     genreId: Joi.string().required().label("Genre"),
