@@ -1,6 +1,5 @@
 import { Component } from "react";
 import { getMovies, deleteMovie } from "../services/fakeMovieService";
-
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup.jsx";
 import paginate from "./utils/paginate";
