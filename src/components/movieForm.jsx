@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Joi from "joi-browser";
 import Form from "./utils/forms-helper.js";
-import { getMovie, saveMovie } from "../services/fakeMovieService";
-import { getGenres } from "../services/fakeGenreService";
+import { getMovie, saveMovie } from "../services/movieService";
+import { getGenres } from "../services/genreService";
+import { toast } from "react-toastify";
 
 const initialData = {
   title: "",
@@ -14,7 +15,13 @@ const initialData = {
 function MovieForm({ match, history }) {
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  const genres = getGenres();
+  const [genres, setGenres] = useState([]);
+  useEffect(() => {
+    getGenres().then(({ data }) => {
+      setGenres(data);
+    });
+  }, []);
+
   const schema = {
     _id: Joi.string().optional(),
     title: Joi.string().required().label("Title"),
@@ -30,18 +37,21 @@ function MovieForm({ match, history }) {
   const form = Form(data, setData, errors, setErrors, schema);
 
   useEffect(() => {
-    const movie = getMovie(match.params.id);
-    if (!movie) {
-      return history.replace("/not-found");
-    }
-    const data = {
-      _id: movie._id,
-      title: movie.title,
-      dailyRentalRate: movie.dailyRentalRate,
-      genreId: movie.genre._id,
-      numberInStock: movie.numberInStock,
+    const fetchData = async () => {
+      const { data: movie } = await getMovie(match.params.id);
+      if (!movie) {
+        return history.replace("/not-found");
+      }
+      const data = {
+        _id: movie._id,
+        title: movie.title,
+        dailyRentalRate: movie.dailyRentalRate,
+        genreId: movie.genre._id,
+        numberInStock: movie.numberInStock,
+      };
+      setData(data);
     };
-    setData(data);
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params]);
 
@@ -49,14 +59,22 @@ function MovieForm({ match, history }) {
     history.push(path);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     const isValid = form.handleSubmit(e);
     if (isValid === false) {
       return;
     }
-    saveMovie(data);
-    setData(initialData);
-    goTo("/movies");
+    try {
+      await saveMovie(data);
+      setData(initialData);
+      goTo("/movies");
+    } catch (error) {
+      let msg = error.message || "Internal Server Error";
+      if (error.status === 4040) {
+        msg = "The movie with the provided id was not found";
+      }
+      toast.error(msg);
+    }
   }
 
   return (
