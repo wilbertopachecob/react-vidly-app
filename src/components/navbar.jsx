@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
+import _ from "lodash";
 
-function Navbar() {
+function Navbar({ user }) {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -30,12 +31,26 @@ function Navbar() {
             <NavLink className="nav-link" to="/rentals">
               Rentals
             </NavLink>
-            <NavLink className="nav-link float-end" to="/login">
-              Login
-            </NavLink>
-            <NavLink className="nav-link float-end" to="/register">
-              Register
-            </NavLink>
+            {_.isEmpty(user) ? (
+              <React.Fragment>
+                {" "}
+                <NavLink className="nav-link float-end" to="/login">
+                  Login
+                </NavLink>
+                <NavLink className="nav-link float-end" to="/register">
+                  Register
+                </NavLink>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <NavLink className="nav-link float-end" to="/profile">
+                  Welcome {user.name}
+                </NavLink>
+                <NavLink className="nav-link float-end" to="/logout">
+                  Logout
+                </NavLink>
+              </React.Fragment>
+            )}
           </div>
         </div>
       </div>
