@@ -1,16 +1,18 @@
 import { ENV } from "../const/env";
 import httpService from "../services/httpService";
 
+const apiEndpoint = `${ENV.API_HOST}/movies`;
+
 export function getMovies() {
-  return httpService.get(`${ENV.API_HOST}/movies`);
+  return httpService.get(apiEndpoint);
 }
 
 export function deleteMovie(id) {
-  return httpService.delete(`${ENV.API_HOST}/movies/${id}`);
+  return httpService.delete(`${apiEndpoint}/${id}`);
 }
 
 export function getMovie(id) {
-  return httpService.get(`${ENV.API_HOST}/movies/${id}`);
+  return httpService.get(`${apiEndpoint}/${id}`);
 }
 
 export function saveMovie(movie) {
@@ -20,10 +22,10 @@ export function saveMovie(movie) {
         genreId: movie.genreId,
         numberInStock: movie.numberInStock,
     };
-    return httpService.put(`${ENV.API_HOST}/movies/${movie._id}`, data);
+    return httpService.put(`${apiEndpoint}/${movie._id}`, data);
 }
 
 export function addMovie(movie) {
-    return httpService.post(`${ENV.API_HOST}/movies`, movie);
+    return httpService.post(apiEndpoint, movie);
 }
 
