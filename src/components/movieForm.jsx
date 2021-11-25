@@ -36,22 +36,28 @@ function MovieForm({ match, history }) {
 
   const form = Form(data, setData, errors, setErrors, schema);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: movie } = await getMovie(match.params.id);
-      if (!movie) {
-        return history.replace("/not-found");
-      }
-      const data = {
-        _id: movie._id,
-        title: movie.title,
-        dailyRentalRate: movie.dailyRentalRate,
-        genreId: movie.genre._id,
-        numberInStock: movie.numberInStock,
-      };
-      setData(data);
+  function mapToViewModel(movie) {
+    return {
+      _id: movie._id,
+      title: movie.title,
+      dailyRentalRate: movie.dailyRentalRate,
+      genreId: movie.genre._id,
+      numberInStock: movie.numberInStock,
     };
-    fetchData();
+  }
+
+  useEffect(() => {
+    const populateMovie = async () => {
+      try {
+        const { data: movie } = await getMovie(match.params.id);
+        setData(mapToViewModel(movie));
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          history.replace("/not-found");
+        }
+      }
+    };
+    populateMovie();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [match.params]);
 
@@ -70,7 +76,7 @@ function MovieForm({ match, history }) {
       goTo("/movies");
     } catch (error) {
       let msg = error.message || "Internal Server Error";
-      if (error.status === 4040) {
+      if (error.response && error.response.status === 404) {
         msg = "The movie with the provided id was not found";
       }
       toast.error(msg);
