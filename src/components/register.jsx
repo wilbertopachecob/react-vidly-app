@@ -2,11 +2,10 @@ import { useState } from "react";
 import Joi from "joi-browser";
 import Form from "./utils/forms-helper.js";
 import { register } from "../services/userService";
-import { toast } from 'react-toastify';
 
-const initialData = { username: "", password: "", name: "" }
+const initialData = { username: "", password: "", name: "" };
 
-function RegisterForm() {
+function RegisterForm({ history }) {
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const schema = {
@@ -24,12 +23,12 @@ function RegisterForm() {
     }
 
     try {
-      await register(data);
-      setData(initialData);
-      toast.success('User registered successfully');
+      const { headers } = await register(data);
+      localStorage.setItem("token", headers['x-auth-token']);
+      history.push("/");
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        const errorsCopy = {...errors}
+        const errorsCopy = { ...errors };
         errorsCopy.username = error.response.data;
         setErrors(errorsCopy);
       }
