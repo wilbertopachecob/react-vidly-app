@@ -26,7 +26,7 @@ function LoginForm({ history }) {
     try {
       const { data: token } = await login(data.username, data.password);
       storeToken(token);
-      history.push("/");
+      window.location = "/";
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errorsCopy = { ...errors };

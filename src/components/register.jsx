@@ -25,7 +25,7 @@ function RegisterForm({ history }) {
     try {
       const { headers } = await register(data);
       localStorage.setItem("token", headers["x-auth-token"]);
-      history.push("/");
+      window.location = "/";
     } catch (error) {
       if (error.response && error.response.status === 400) {
         const errorsCopy = { ...errors };
