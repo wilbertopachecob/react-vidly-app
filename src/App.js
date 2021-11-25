@@ -1,25 +1,33 @@
-import Movies from "./components/movies.jsx";
-import Navbar from "./components/navbar.jsx";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import jwtDecode from "jwt-decode";
 
-import "react-toastify/dist/ReactToastify.css";
-
+import Movies from "./components/movies.jsx";
+import Navbar from "./components/navbar.jsx";
 import Rentals from "./components/rentals";
 import Customers from "./components/customers";
 import NotFound from "./components/not-found";
 import MovieForm from "./components/movieForm";
-import React from "react";
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/register';
 import NewMovie from './components/newMovie';
 
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  const [user, setUser] = useState({})
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const user = jwtDecode(token);
+        setUser(user)
+      }
+  },[])
   return (
     <React.Fragment>
       <ToastContainer />
-      <Navbar />
+      <Navbar user={user}/>
       <main className="container mt-3">
         <Switch>
           <Route path="/login" component={LoginForm} />
