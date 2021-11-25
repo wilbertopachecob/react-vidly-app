@@ -1,0 +1,1 @@
+export const GENERIC_ERROR = 'Internal Server Error';
