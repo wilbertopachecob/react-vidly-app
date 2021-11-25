@@ -12,8 +12,10 @@ import MovieForm from "./components/movieForm";
 import LoginForm from './components/loginForm';
 import RegisterForm from './components/register';
 import NewMovie from './components/newMovie';
+import Logout from './components/logout';
 
 import "react-toastify/dist/ReactToastify.css";
+
 
 function App() {
   const [user, setUser] = useState({})
@@ -31,6 +33,7 @@ function App() {
       <main className="container mt-3">
         <Switch>
           <Route path="/login" component={LoginForm} />
+          <Route path="/logout" component={Logout} />
           <Route path="/register" component={RegisterForm} />
           <Route path="/movies/add" component={NewMovie} />
           <Route path="/movies/:id" component={MovieForm} />
