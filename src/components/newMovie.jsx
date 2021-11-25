@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Joi from "joi-browser";
 import Form from "./utils/forms-helper.js";
 import { getGenres } from "../services/genreService";
-import { saveMovie } from "../services/fakeMovieService";
+import { addMovie } from "../services/movieService";
+import { toast } from 'react-toastify';
 
 const initialData = {
   title: "",
@@ -11,10 +12,17 @@ const initialData = {
   numberInStock: "",
 };
 
-async function NewMovie() {
+function NewMovie() {
   const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
-  const {data: genres} = await getGenres();
+  const [genres, setGenres] = useState([]);
+  
+  useEffect(() => {
+    getGenres().then(({ data }) => {
+      setGenres(data);
+    });
+  }, []);
+
   const schema = {
     title: Joi.string().required().label("Title"),
     genreId: Joi.string().required().label("Genre"),
@@ -28,13 +36,20 @@ async function NewMovie() {
 
   const form = Form(data, setData, errors, setErrors, schema);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     const isValid = form.handleSubmit(e);
     if (isValid === false) {
       return;
     }
-    saveMovie(data);
-    setData(initialData);
+    
+    try {
+      await addMovie(data);  
+      setData(initialData);
+      toast.success('The movie was added successfully');
+    } catch (error) {
+      let msg = error.message || 'Internal Server Error' 
+      toast.error(msg);
+    }
   }
 
   return (
